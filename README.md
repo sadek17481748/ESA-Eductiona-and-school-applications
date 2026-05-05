@@ -40,7 +40,7 @@ Islamic School Applications (ISA) is a full-stack SaaS platform for Islamic scho
 
 ## Overview
 
-ISA is designed for multiple schools (tenants) with strict data isolation, role-based access control, and a modern dashboard interface.
+ISA is designed for multiple schools (tenants) with strict data isolation, role-based access control, and a modern, mobile-responsive dashboard interface.
 
 Planned core roles:
 
