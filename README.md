@@ -11,4 +11,3 @@ Full-stack SaaS web application for Islamic schools.
 ## Status
 
 This README will be built up step-by-step alongside development and git commits.
-
