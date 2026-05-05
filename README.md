@@ -12,4 +12,7 @@ python3 -m http.server 8080
 
 Then visit http://127.0.0.1:8080/
 
-Coursework documentation and static markup for the web application module.
+## Layout
+
+- **`css/base.css`** — shared theme (black, white, gold; sidebar “app shell” for dashboards).
+- **Pages** — links between `.html` files are relative (see the index table on the home page).
