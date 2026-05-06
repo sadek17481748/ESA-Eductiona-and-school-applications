@@ -1,0 +1,57 @@
+/* ESA static structure — HTML/CSS only (black, white, gold) */
+
+:root {
+  --bg: #0a0a0a;
+  --surface: #121212;
+  --surface-up: #1a1a1a;
+  --text: #f5f5f0;
+  --muted: #9c9c8e;
+  --gold: #c9a227;
+  --gold-soft: rgba(201, 162, 39, 0.15);
+  --border: #2c2c28;
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, sans-serif;
+  --radius: 10px;
+  --sidebar-width: 240px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.55;
+}
+
+a {
+  color: var(--gold);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.skip {
+  position: absolute;
+  left: -200px;
+  top: 0;
+  background: var(--gold);
+  color: var(--bg);
+  padding: 0.5rem 1rem;
+  z-index: 1000;
+}
+
+.skip:focus {
+  left: 0;
+}
