@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ESA — Teacher (structure)</title>
+  <link rel="stylesheet" href="css/base.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="header-geometry" aria-hidden="true"></div>
+    <div class="header-inner">
+      <div class="brand">
+        <a href="index.html" style="color:inherit;text-decoration:none;">
+          <span class="brand-mark">ESA</span>
+          <span class="brand-tag">Teacher</span>
+        </a>
+      </div>
+      <nav class="top-nav" aria-label="Account">
+        <a href="timetable.html">Timetable</a>
+        <a href="messages.html">Messages</a>
+        <a href="login.html">Log out</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Section navigation">
+      <p class="sidebar-title">Teaching</p>
+      <nav class="sidebar-nav">
+        <a href="dashboard-teacher.html" aria-current="page">Overview</a>
+        <a href="attendance.html">Attendance</a>
+        <a href="worksheets.html">Worksheets</a>
+        <a href="exams.html">Exams</a>
+        <a href="hifz-progress.html">Hifz</a>
+        <a href="quran-annotation.html">Qur’an</a>
+        <a href="behaviour.html">Behaviour</a>
+      </nav>
+      <p class="sidebar-title">Sign-off</p>
+      <nav class="sidebar-nav">
+        <a href="worksheets.html#pending">Pending submissions</a>
+        <a href="exams.html#finalise">Finalise results</a>
+        <a href="hifz-progress.html#signoff">Hifz sign-off</a>
+      </nav>
+    </aside>
+    <main id="main" class="app-main">
+      <h1 class="page-title">Teacher workspace</h1>
+      <p class="page-meta">Today’s sessions, assignments, and verification queues.</p>
+
+      <section class="panel" style="margin-bottom:1.25rem;">
+        <h2 style="margin-top:0;font-size:1.1rem;">Today</h2>
+        <div class="accent-bar"></div>
+        <div class="split">
+          <div class="card"><h2>Timetable strip</h2><p>Next classes / livestream links area</p></div>
+          <div class="card"><h2>Actions</h2><p>Record attendance, assign work</p></div>
+        </div>
+      </section>
+
+      <section class="panel" style="margin-bottom:1.25rem;">
+        <h2 style="margin-top:0;font-size:1.1rem;">Pending sign-offs</h2>
+        <div class="accent-bar"></div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr><th>Student</th><th>Type</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+              <tr class="placeholder-row"><td colspan="3">Hifz / worksheet / exam queue placeholder</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <div class="grid-cards">
+        <article class="card"><h2>Classes</h2><p>Roster shortcuts</p></article>
+        <article class="card"><h2>Audio feedback</h2><p>Recitation review area</p></article>
+        <article class="card"><h2>Analytics</h2><p><a href="analytics.html">School metrics</a></p></article>
+      </div>
+    </main>
+  </div>
+  <footer class="site-footer">ESA — static HTML/CSS structure prototype</footer>
+</body>
+</html>
