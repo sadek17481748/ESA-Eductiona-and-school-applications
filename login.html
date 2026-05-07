@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ESA — Log in (structure)</title>
+  <link rel="stylesheet" href="css/base.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="header-geometry" aria-hidden="true"></div>
+    <div class="header-inner">
+      <div class="brand">
+        <a href="index.html" style="color:inherit;text-decoration:none;">
+          <span class="brand-mark">ESA</span>
+          <span class="brand-tag">Education &amp; Schooling Applications</span>
+        </a>
+      </div>
+      <nav class="top-nav" aria-label="Primary">
+        <a href="index.html">Home</a>
+        <a href="login.html" aria-current="page">Log in</a>
+        <a class="btn-outline" href="register.html">Register</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="page-wrap">
+    <main id="main" class="main-single">
+      <section class="panel">
+        <h1>Log in</h1>
+        <div class="accent-bar"></div>
+        <p class="lead">Form layout only — fields are inert.</p>
+        <form class="form-stack" action="#" method="get">
+          <div class="field">
+            <label for="username">Username</label>
+            <input id="username" name="username" type="text" autocomplete="username" readonly>
+          </div>
+          <div class="field">
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" autocomplete="current-password" readonly>
+          </div>
+          <button type="button" class="btn-primary">Sign in</button>
+        </form>
+        <p class="lead" style="margin-top:1.25rem;margin-bottom:0;">
+          <a href="register.html">Create an account</a>
+        </p>
+      </section>
+    </main>
+    <footer class="site-footer">ESA — static HTML/CSS structure prototype</footer>
+  </div>
+</body>
+</html>
