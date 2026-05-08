@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ESA — Student (structure)</title>
+  <link rel="stylesheet" href="css/base.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="header-geometry" aria-hidden="true"></div>
+    <div class="header-inner">
+      <div class="brand">
+        <a href="index.html" style="color:inherit;text-decoration:none;">
+          <span class="brand-mark">ESA</span>
+          <span class="brand-tag">Student</span>
+        </a>
+      </div>
+      <nav class="top-nav" aria-label="Account">
+        <a href="timetable.html">Timetable</a>
+        <a href="messages.html">Messages</a>
+        <a href="login.html">Log out</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Section navigation">
+      <p class="sidebar-title">Learn</p>
+      <nav class="sidebar-nav">
+        <a href="dashboard-student.html" aria-current="page">Overview</a>
+        <a href="timetable.html">Timetable</a>
+        <a href="worksheets.html">Homework &amp; worksheets</a>
+        <a href="exams.html">Exams</a>
+        <a href="hifz-progress.html">Hifz</a>
+        <a href="quran-annotation.html">Qur’an feedback</a>
+      </nav>
+    </aside>
+    <main id="main" class="app-main">
+      <h1 class="page-title">Student portal</h1>
+      <p class="page-meta">Read-heavy layout; signed-off progress highlighted.</p>
+
+      <section class="panel" style="margin-bottom:1.25rem;">
+        <h2 style="margin-top:0;font-size:1.1rem;">This week</h2>
+        <div class="accent-bar"></div>
+        <div class="grid-cards" style="margin-top:0;">
+          <article class="card"><h2>Due</h2><p>Deadlines list region</p></article>
+          <article class="card"><h2>Upload</h2><p>Recitation / file submission region</p></article>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2 style="margin-top:0;font-size:1.1rem;">Progress (verified only)</h2>
+        <div class="accent-bar"></div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr><th>Area</th><th>Status</th><th>Signed off</th></tr>
+            </thead>
+            <tbody>
+              <tr class="placeholder-row"><td colspan="3">Hifz / exam / worksheet summary placeholder</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+  <footer class="site-footer">ESA — static HTML/CSS structure prototype</footer>
+</body>
+</html>
