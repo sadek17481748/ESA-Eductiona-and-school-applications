@@ -279,25 +279,55 @@ This section will be filled out with actual paths as the project is generated.
 
 ### Local setup
 
-This section will be filled out step-by-step once the Django project is created.
+1. Python 3.11+ recommended (3.13 supported).
+2. Create a virtual environment and install dependencies:
+
+   ```bash
+   python3 -m venv .venv
+   source .venv/bin/activate  # Windows: .venv\Scripts\activate
+   pip install -r requirements.txt
+   ```
+
+3. Copy environment template and set a secret key for local dev:
+
+   ```bash
+   cp .env.example .env
+   ```
+
+4. Apply migrations and create a superuser (optional):
+
+   ```bash
+   python manage.py migrate
+   python manage.py createsuperuser
+   ```
 
 ### Environment variables
 
-To be added:
+Defined in `.env` (see `.env.example`). Single source of truth is `core/settings.py` via `django-environ`.
 
-- `DJANGO_SECRET_KEY`
-- `DEBUG`
-- `DATABASE_URL` (PostgreSQL)
-- `STRIPE_SECRET_KEY`
-- `STRIPE_WEBHOOK_SECRET`
+| Variable | Purpose |
+| --- | --- |
+| `SECRET_KEY` | Django secret; **required in production** |
+| `DEBUG` | `True`/`False` |
+| `ALLOWED_HOSTS` | Comma-separated hostnames |
+| `DATABASE_URL` | PostgreSQL URL; if omitted, SQLite is used for local dev |
+| `STRIPE_SECRET_KEY` | (payments phase) |
+| `STRIPE_WEBHOOK_SECRET` | (payments phase) |
 
 ### Run locally
 
-To be added.
+```bash
+python manage.py runserver
+```
+
+- Admin: http://127.0.0.1:8000/admin/
+- JWT obtain pair: `POST /api/auth/token/` with `username` and `password` (JSON defaults depend on client; browsable API uses session for other routes).
 
 ## API overview
 
-To be added (DRF endpoints + authentication approach).
+- **JWT**: Simple JWT — obtain at `/api/auth/token/`, refresh at `/api/auth/token/refresh/`.
+- **Default DRF permission**: authenticated (tighten per-view as apps land).
+- Domain APIs (schools, students, payments, etc.) will be added app-by-app with tenant-scoped querysets.
 
 ## Payments (Stripe Connect)
 
@@ -311,7 +341,13 @@ To be added as features ship (screens, flows, and evidence).
 
 ### Automated testing
 
-To be added (pytest + Django test suite; TDD commits where appropriate).
+Run the Django test suite:
+
+```bash
+python manage.py test
+```
+
+Tests are added incrementally alongside features (see `accounts` tests for the custom user model).
 
 ## Deployment
 
