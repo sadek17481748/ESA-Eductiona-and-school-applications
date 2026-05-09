@@ -1,6 +1,6 @@
-# Islamic School Applications (ISA)
+# ESA — Education and Schooling Applications
 
-Islamic School Applications (ISA) is a full-stack SaaS platform for Islamic schools to manage admissions, learning, attendance, progress, messaging, and payments in one place.
+**ESA (Education and Schooling Applications)** is a full-stack multi-tenant SaaS platform for Islamic schools. It helps staff manage admissions, learning, attendance, academic progress, teacher-verified sign-offs, messaging, and payments (including Stripe Connect payouts to schools) in one place.
 
 ## Table of Contents
 
@@ -40,7 +40,7 @@ Islamic School Applications (ISA) is a full-stack SaaS platform for Islamic scho
 
 ## Overview
 
-ISA is designed for multiple schools (tenants) with strict data isolation, role-based access control, and a modern, mobile-responsive dashboard interface.
+ESA is designed for multiple schools (tenants) with strict data isolation, role-based access control, JWT-ready APIs (Django REST Framework), and a mobile-responsive dashboard. **Teacher sign-off** is a core trust layer: Hifz progress, homework/worksheets, and exam results only become official after an authenticated teacher verifies them (with re-authentication on sign-off and audit logging planned alongside implementation).
 
 Planned core roles:
 
@@ -182,17 +182,25 @@ This section will be written and updated alongside development.
 ### Visual language
 
 - Modern, minimal dashboard UI with clear spacing and consistent components.
-- Subtle Islamic geometric inspiration (mosaic/rug motifs) used sparingly in headers, dividers, and accent elements.
+- **Arabic design inspiration**: subtle geometric patterns (e.g. mashrabiya / mosaic motifs) in headers, dividers, and section breaks—used sparingly so content stays scannable.
 
 ### Colour palette
 
-The base palette is intentionally simple and high contrast:
+The UI theme is **black, white, and hints of gold**:
 
-- **Black / off-black** for the primary background and navigation.
-- **White / off-white** for content panels and primary text contrast.
-- **Gold accents** used sparingly for highlights, active states, and key actions.
+- **Black / near-black** — primary background and primary navigation.
+- **White / off-white** — content surfaces and high-contrast body text on dark areas.
+- **Gold (accent)** — sparing use for primary actions, focus rings, active nav states, and key metrics (not large fills).
 
-Palette values and components will be documented once the frontend theme is implemented.
+Concrete CSS variables and component tokens will be added with the first template theme; contrast targets WCAG AA where feasible.
+
+### Teacher sign-off & verification (product requirement)
+
+- **Hifz**: surah/lesson status moves to *Completed* only after teacher sign-off; students and parents never self-approve completion.
+- **Homework / worksheets**: submissions move through pending → approved/rejected with teacher id and timestamp.
+- **Exams**: auto-marking may produce a draft score; results are **official** only when a teacher finalises (signs off) the record.
+- **Security**: sign-off actions require **password re-entry** (2FA optional later); each sign-off creates an **AuditLog** entry (`SIGN_OFF`, target type, target id, timestamp).
+- **Analytics**: parent dashboards and school reports prioritise **signed-off / finalised** data for progress percentages.
 
 ### Typography
 
@@ -224,7 +232,9 @@ Palette values and components will be documented once the frontend theme is impl
 
 ## File Structure
 
-The Django project will be organised into apps for each reusable component:
+- `manage.py` — Django entrypoint
+- `core/` — project settings, root URLconf, WSGI/ASGI
+- Reusable apps (each in its own Django app):
 
 - `accounts`
 - `schools`
@@ -251,21 +261,19 @@ This section will be filled out with actual paths as the project is generated.
 
 ### Core entities (planned)
 
-- User (custom)
-- School
-- Teacher
-- Student
-- Parent
-- Subject
+- User (custom, with role: Super Admin, School Admin, Teacher, Student, Parent)
+- School (tenant root)
+- Teacher, Student, Parent (profiles linked to `User` and `School`)
+- Subject (custom per school: Hifz / Alimiyah / General)
 - Class / YearGroup
-- Timetable
-- Attendance
+- Timetable, Attendance
 - BehaviourLog
-- Worksheet / WorksheetSubmission
-- Exam / ExamResult
-- Qur’anAnnotation
-- PendingPayment / CompletedPayment
-- AuditLog
+- Worksheet, **WorksheetSubmission** (pending / approved / rejected; `signed_off_by`, `signed_off_at`)
+- Exam, **ExamResult** (draft vs **finalised**; teacher sign-off fields)
+- **HifzRecord** (status; `signed_off`, `signed_off_by`, `signed_off_at`, notes)
+- Qur’anAnnotation (per student / session; Tajweed / Memorisation / Fluency tags, audio)
+- PendingPayment / CompletedPayment (Stripe Connect; `reference_id` on completed)
+- **AuditLog** (including `SIGN_OFF` actions)
 
 ## Development
 
