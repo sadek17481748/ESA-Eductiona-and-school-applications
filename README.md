@@ -138,10 +138,11 @@ The goal is to have the application in a stable, deployable state by **July 1**,
 
 ## Quick links (assessor)
 
-- **Repository**: (to be added)
+- **Repository**: https://github.com/sadek17481748/ESA-Eductiona-and-school-applications
 - **Live app**: (to be added)
 - **Test credentials**: (to be added)
 - **Wireframes**: (to be added)
+- **Sprint checklist**: Follow the delivery timeline under [Planning notes](#planning-notes-written-at-project-start) (begin with **May 10–14 Foundation**). Optional: track weekly bullets as GitHub Issues on the repository above.
 
 ## Features
 
