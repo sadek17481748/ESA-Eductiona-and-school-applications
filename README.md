@@ -1,43 +1,375 @@
-<!-- Repository README — rendered by GitHub on the project home page; HTML comments are invisible in the default view but visible in source. -->
+# ESA — Education and Schooling Applications
 
-# ESA — static HTML/CSS prototype
+**ESA (Education and Schooling Applications)** is a full-stack multi-tenant SaaS platform for Islamic schools. It helps staff manage admissions, learning, attendance, academic progress, teacher-verified sign-offs, messaging, and payments (including Stripe Connect payouts to schools) in one place.
 
-<!-- Opening summary for assessors: scope is markup and styling only. -->
-**Education and Schooling Applications** — wireframes in plain HTML and CSS only (no backend, no JavaScript).
+> **Current tree:** Static HTML/CSS wireframes live at the repository root (`*.html`, `css/base.css`). Preview with `python3 -m http.server 8080` then open http://127.0.0.1:8080/ . The Django and API sections below describe the planned implementation and are unchanged from the module specification.
 
-<!-- Section: running the files locally without a build step -->
-## View locally
+## Table of Contents
 
-Open `index.html` in a browser, or from this folder:
+- [Overview](#overview)
+  - [Project goals](#project-goals)
+  - [Planning notes (written at project start)](#planning-notes-written-at-project-start)
+- [Quick links (assessor)](#quick-links-assessor)
+- [Features](#features)
+- [User Experience (UX)](#user-experience-ux)
+  - [User stories](#user-stories)
+- [Wireframes](#wireframes)
+- [Design](#design)
+  - [Visual language](#visual-language)
+  - [Colour palette](#colour-palette)
+  - [Typography](#typography)
+  - [Accessibility](#accessibility)
+- [Technologies Used](#technologies-used)
+- [File Structure](#file-structure)
+- [Data model](#data-model)
+  - [Tenant model](#tenant-model)
+  - [Core entities (planned)](#core-entities-planned)
+- [Development](#development)
+  - [Local setup](#local-setup)
+  - [Environment variables](#environment-variables)
+  - [Run locally](#run-locally)
+- [API overview](#api-overview)
+- [Payments (Stripe Connect)](#payments-stripe-connect)
+- [Testing and Bugs](#testing-and-bugs)
+  - [Manual testing](#manual-testing)
+  - [Automated testing](#automated-testing)
+- [Deployment](#deployment)
+- [Security](#security)
+- [Sources and references](#sources-and-references)
+- [Author](#author)
+
+---
+
+## Overview
+
+ESA is designed for multiple schools (tenants) with strict data isolation, role-based access control, JWT-ready APIs (Django REST Framework), and a mobile-responsive dashboard. **Teacher sign-off** is a core trust layer: Hifz progress, homework/worksheets, and exam results only become official after an authenticated teacher verifies them (with re-authentication on sign-off and audit logging planned alongside implementation).
+
+Planned core roles:
+
+- **Super Admin**: manage schools, platform-wide settings, subscriptions, and analytics.
+- **School Admin**: manage staff/students/parents, set fees, and connect Stripe for payouts.
+- **Teacher**: manage classes/subjects, attendance, homework, exams, and progress sign-offs.
+- **Student**: view timetable/work and submit recordings and assignments.
+- **Parent**: monitor progress and payments, and make payments.
+
+### Project goals
+
+- Build a real-world Django MVC application with a relational PostgreSQL database and reusable Django apps.
+- Implement tenant data isolation per school and consistent role permissions.
+- Implement end-to-end CRUD flows where database changes are reflected immediately in the UI.
+- Implement Stripe Connect so payments are paid out directly to schools with an optional platform commission.
+- Maintain a detailed commit history showing development progress in small, reviewable steps.
+
+### Planning notes (written at project start)
+
+This section captures the early plan in plain language to keep scope clear while building step-by-step.
+
+#### Architecture notes (initial)
+
+- Multi-tenant: each record belongs to a `School` tenant; all queries are scoped to the authenticated user’s tenant.
+- Auth: JWT-based authentication for API and role-based permissions for views/actions.
+- RBAC: explicit roles and permission checks (Super Admin vs School Admin vs Teacher vs Student vs Parent).
+
+#### Delivery timeline (May 10 → July 1)
+
+The goal is to have the application in a stable, deployable state by **July 1**, leaving **July 1 → July 7** as buffer for final polish, assessor checks, and contingency.
+
+- **May 10 – May 14 (Foundation)**
+  - Create Django project + settings (env-based config, Postgres, static/media structure).
+  - Add core apps scaffolding (`accounts`, `schools`, etc.) and baseline URL structure.
+  - Create custom user model and authentication foundations (JWT).
+  - Establish tenant model (`School`) and a consistent way to scope data to a school.
+
+- **May 15 – May 21 (RBAC + tenant isolation)**
+  - Define roles and permission strategy (Super Admin / School Admin / Teacher / Student / Parent).
+  - Implement permission checks and tenant query scoping in DRF and template views.
+  - Add audit logging foundations for sensitive actions.
+
+- **May 22 – May 28 (School setup flows)**
+  - School Admin can create/manage teachers, students, parents (CRUD).
+  - Year groups / classes models and assignment flows.
+  - Bulk student import (CSV) initial version.
+
+- **May 29 – June 4 (Subjects + timetable)**
+  - Custom subjects per school (Hifz / Alimiyah / General) + teacher assignment.
+  - Timetable creation and student/teacher views.
+  - Attendance tracking basics linked to timetable/class.
+
+- **June 5 – June 11 (Homework + worksheets + sign-off)**
+  - Homework/worksheet assignment and submission flows.
+  - Teacher sign-off verification: approve/reject submissions with secure server-side rules.
+  - Notifications for assignments and sign-off outcomes (in-app first).
+
+- **June 12 – June 18 (Hifz tracking + sign-off)**
+  - Hifz records (status: Not Started / In Progress / Completed only via sign-off).
+  - Smart revision suggestions (basic rules first, improve iteratively).
+  - Teacher sign-off flow with re-auth requirement (password re-entry).
+
+- **June 19 – June 23 (Qur’an annotation system)**
+  - Qur’an text display and per-student session annotation model.
+  - Mistake tagging (Tajweed / Memorisation / Fluency), timestamps, comments.
+  - Audio upload and playback for recitations + teacher audio feedback.
+
+- **June 24 – June 28 (Exams + sign-off finalisation)**
+  - Exam creation (MCQ auto-mark + written/manual).
+  - Results with “finalised” teacher sign-off requirement before being official.
+  - Parent/student reporting views show only verified/finalised outcomes where required.
+
+- **June 29 – July 1 (Payments + deployment-ready pass)**
+  - Fees: pending vs completed payments, parent payment journey.
+  - Stripe Connect onboarding for schools + payment routing to school accounts (platform fee optional).
+  - Webhooks + receipts (PDF basic) + overdue reminders (email + in-app).
+  - Stabilisation: permissions review, tenant isolation review, and deployment checklist.
+
+**July 1 – July 7 (Buffer)**
+
+- Full regression testing and bug fixes.
+- Evidence collection (screenshots, test runs, validation, deployment notes).
+- README expansion (data schema, deployment steps, testing evidence, assessor quick links).
+
+#### Build order (high level)
+
+- Project setup (Django + DRF) and configuration for Postgres + environment variables.
+- Custom user model and authentication foundations.
+- Tenant model (`School`) + isolation rules.
+- Core learning flows: subjects, timetables, attendance.
+- Progress systems: Hifz tracking + verification sign-off, worksheets, exams.
+- Payments: fees, pending/completed payments, Stripe Connect payout flow.
+- Notifications + messaging.
+- Analytics dashboards.
+
+## Quick links (assessor)
+
+- **Repository**: https://github.com/sadek17481748/ESA-Eductiona-and-school-applications
+- **Live app**: (to be added)
+- **Test credentials**: (to be added)
+- **Wireframes**: (to be added)
+- **Sprint checklist**: Follow the delivery timeline under [Planning notes](#planning-notes-written-at-project-start) (begin with **May 10–14 Foundation**). Optional: track weekly bullets as GitHub Issues on the repository above.
+
+## Features
+
+This section will be expanded as features are implemented and tested.
+
+- **Multi-tenant schools**
+- **RBAC (roles + permissions)**
+- **Custom subjects per school**
+- **Timetable system**
+- **Attendance tracking**
+- **Hifz tracking**
+- **Qur’an annotation**
+- **Teacher sign-off verification** (Hifz, worksheets, exams)
+- **Payments with Stripe Connect**
+- **Notifications (email + in-app)**
+- **Messaging (real-time)**
+- **Analytics dashboards**
+
+## User Experience (UX)
+
+### User stories
+
+This section will be written and updated alongside development.
+
+- As a School Admin, I want to manage teachers, students, and parents so I can run the school from one system.
+- As a Teacher, I want to record attendance and assign homework so student progress is tracked.
+- As a Teacher, I want to verify progress with sign-off so reports reflect authentic completion.
+- As a Parent, I want to view verified progress and pay outstanding fees so I can support my child’s learning.
+- As a Student, I want to view my timetable and submit recordings so my teacher can review my work.
+
+## Wireframes
+
+- Wireframes will be added under `docs/` and linked here.
+
+## Design
+
+### Visual language
+
+- Modern, minimal dashboard UI with clear spacing and consistent components.
+- **Arabic design inspiration**: subtle geometric patterns (e.g. mashrabiya / mosaic motifs) in headers, dividers, and section breaks—used sparingly so content stays scannable.
+
+### Colour palette
+
+The UI theme is **black, white, and hints of gold**:
+
+- **Black / near-black** — primary background and primary navigation.
+- **White / off-white** — content surfaces and high-contrast body text on dark areas.
+- **Gold (accent)** — sparing use for primary actions, focus rings, active nav states, and key metrics (not large fills).
+
+Concrete CSS variables and component tokens will be added with the first template theme; contrast targets WCAG AA where feasible.
+
+### Teacher sign-off & verification (product requirement)
+
+- **Hifz**: surah/lesson status moves to *Completed* only after teacher sign-off; students and parents never self-approve completion.
+- **Homework / worksheets**: submissions move through pending → approved/rejected with teacher id and timestamp.
+- **Exams**: auto-marking may produce a draft score; results are **official** only when a teacher finalises (signs off) the record.
+- **Security**: sign-off actions require **password re-entry** (2FA optional later); each sign-off creates an **AuditLog** entry (`SIGN_OFF`, target type, target id, timestamp).
+- **Analytics**: parent dashboards and school reports prioritise **signed-off / finalised** data for progress percentages.
+
+### Typography
+
+- Fonts will be chosen to support English + Arabic readability (to be finalised).
+
+### Accessibility
+
+- Keyboard navigable UI, readable contrast, clear focus states, and semantic HTML.
+- Accessible form labels and validation feedback.
+
+## Technologies Used
+
+### Backend
+
+- Django (Python)
+- Django REST Framework
+
+### Database
+
+- PostgreSQL
+
+### Payments
+
+- Stripe Connect
+
+### Frontend
+
+- Django templates with HTML/CSS/JavaScript (initial approach)
+
+## File Structure
+
+- `manage.py` — Django entrypoint
+- `core/` — project settings, root URLconf, WSGI/ASGI
+- Reusable apps (each in its own Django app):
+
+- `accounts`
+- `schools`
+- `students`
+- `teachers`
+- `subjects`
+- `timetable`
+- `payments`
+- `hifz`
+- `alimiyah`
+- `exams`
+- `analytics`
+- `messaging`
+- `notifications`
+
+This section will be filled out with actual paths as the project is generated.
+
+**Static wireframes (present in repo):** `index.html`, role and feature `*.html` pages, and `css/base.css` — these mirror the planned app areas above until Django apps are recreated.
+
+## Data model
+
+### Tenant model
+
+- `School` is the tenant root.
+- Tenant isolation rules will be documented and tested (query scoping, permissions, and admin boundaries).
+
+### Core entities (planned)
+
+- User (custom, with role: Super Admin, School Admin, Teacher, Student, Parent)
+- School (tenant root)
+- Teacher, Student, Parent (profiles linked to `User` and `School`)
+- Subject (custom per school: Hifz / Alimiyah / General)
+- Class / YearGroup
+- Timetable, Attendance
+- BehaviourLog
+- Worksheet, **WorksheetSubmission** (pending / approved / rejected; `signed_off_by`, `signed_off_at`)
+- Exam, **ExamResult** (draft vs **finalised**; teacher sign-off fields)
+- **HifzRecord** (status; `signed_off`, `signed_off_by`, `signed_off_at`, notes)
+- Qur’anAnnotation (per student / session; Tajweed / Memorisation / Fluency tags, audio)
+- PendingPayment / CompletedPayment (Stripe Connect; `reference_id` on completed)
+- **AuditLog** (including `SIGN_OFF` actions)
+
+## Development
+
+### Local setup
+
+1. Python 3.11+ recommended (3.13 supported).
+2. Create a virtual environment and install dependencies:
+
+   ```bash
+   python3 -m venv .venv
+   source .venv/bin/activate  # Windows: .venv\Scripts\activate
+   pip install -r requirements.txt
+   ```
+
+3. Copy environment template and set a secret key for local dev:
+
+   ```bash
+   cp .env.example .env
+   ```
+
+4. Apply migrations and create a superuser (optional):
+
+   ```bash
+   python manage.py migrate
+   python manage.py createsuperuser
+   ```
+
+### Environment variables
+
+Defined in `.env` (see `.env.example`). Single source of truth is `core/settings.py` via `django-environ`.
+
+| Variable | Purpose |
+| --- | --- |
+| `SECRET_KEY` | Django secret; **required in production** |
+| `DEBUG` | `True`/`False` |
+| `ALLOWED_HOSTS` | Comma-separated hostnames |
+| `DATABASE_URL` | PostgreSQL URL; if omitted, SQLite is used for local dev |
+| `STRIPE_SECRET_KEY` | (payments phase) |
+| `STRIPE_WEBHOOK_SECRET` | (payments phase) |
+
+### Run locally
 
 ```bash
-python3 -m http.server 8080
+python manage.py runserver
 ```
 
-Then visit http://127.0.0.1:8080/
+- Admin: http://127.0.0.1:8000/admin/
+- JWT obtain pair: `POST /api/auth/token/` with `username` and `password` (JSON defaults depend on client; browsable API uses session for other routes).
 
-<!-- Section: how assets and pages relate -->
-## Layout
+## API overview
 
-- **`css/base.css`** — shared theme (black, white, gold; sidebar “app shell” for dashboards).
-- **Pages** — links between `.html` files are relative (see the index table on the home page).
+- **JWT**: Simple JWT — obtain at `/api/auth/token/`, refresh at `/api/auth/token/refresh/`.
+- **Default DRF permission**: authenticated (tighten per-view as apps land).
+- Domain APIs (schools, students, payments, etc.) will be added app-by-app with tenant-scoped querysets.
 
-<!-- Section: design tokens referenced throughout the stylesheets -->
-## Palette
+## Payments (Stripe Connect)
 
-Black and near-black backgrounds, off-white body text, gold reserved for accents and primary actions.
+To be added (onboarding schools, payout flow, platform commission, webhooks).
 
-<!-- Section: discoverability — full list lives on index.html -->
-## Page inventory
+## Testing and Bugs
 
-The home page lists each wireframe file and how it links to the rest of the set.
+### Manual testing
 
-<!-- Section: alignment with module milestones -->
-## Milestones
+To be added as features ship (screens, flows, and evidence).
 
-Further integration with application logic follows the module delivery schedule.
+### Automated testing
 
-<!-- Section: credit -->
+Run the Django test suite:
+
+```bash
+python manage.py test
+```
+
+Tests are added incrementally alongside features (see `accounts` tests for the custom user model).
+
+## Deployment
+
+To be added (platform choice, environment variables, Postgres provisioning, Stripe webhook configuration).
+
+## Security
+
+To be expanded as implementation progresses:
+
+- Environment variables for secrets
+- Tenant data isolation tests
+- Permission checks for sensitive actions (especially teacher sign-offs and payments)
+- Audit logs for critical actions
+
+## Sources and references
+
+To be added as implementation progresses (docs, tutorials, UI references).
+
 ## Author
 
-Mohammed Sadek Hussain
+- Mohammed Sadek Hussain
