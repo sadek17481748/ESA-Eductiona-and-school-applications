@@ -1,5 +1,15 @@
-/* ESA static structure — HTML/CSS only (black, white, gold) */
+/*
+ * ESA — shared stylesheet for static wireframes
+ * ---------------------------------------------------------------------------
+ * Visual language: near-black surfaces, off-white text, gold accents.
+ * Layout patterns:
+ *   - Marketing/auth: .page-wrap + .main-single | .main-wide
+ *   - Dashboards:    .app-shell + .sidebar + .app-main
+ * Tables, forms, and cards are structural placeholders for future templates.
+ * ---------------------------------------------------------------------------
+ */
 
+/* Tokens: colours, typography scale, radii, sidebar width */
 :root {
   --bg: #0a0a0a;
   --surface: #121212;
@@ -14,12 +24,14 @@
   --sidebar-width: 240px;
 }
 
+/* Box model reset */
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
 
+/* Root font size — scales rem units across the UI */
 html {
   font-size: 16px;
 }
@@ -56,7 +68,7 @@ a:hover {
   left: 0;
 }
 
-/* —— Site chrome —— */
+/* -------- Site chrome (sticky header, brand, primary nav) -------- */
 .site-header {
   position: sticky;
   top: 0;
@@ -143,7 +155,7 @@ a:hover {
   color: var(--muted);
 }
 
-/* —— Page layout (marketing / auth) —— */
+/* -------- Marketing and auth column layouts -------- */
 .page-wrap {
   min-height: calc(100vh - 120px);
   display: flex;
@@ -191,7 +203,7 @@ a:hover {
   margin: 0 0 1.5rem;
 }
 
-/* —— Forms (structure only) —— */
+/* -------- Forms: stacked fields and primary button (prototype) -------- */
 .form-stack {
   display: flex;
   flex-direction: column;
@@ -262,7 +274,7 @@ a:hover {
   color: var(--muted);
 }
 
-/* —— App shell (dashboards) —— */
+/* -------- Dashboard shell: sidebar + main column -------- */
 .app-shell {
   display: flex;
   min-height: calc(100vh - 80px);
@@ -321,7 +333,7 @@ a:hover {
   margin: 0 0 1.5rem;
 }
 
-/* —— Tables / lists (empty structure) —— */
+/* -------- Data tables, toolbars, split grids, responsive rules -------- */
 .table-wrap {
   overflow-x: auto;
   border: 1px solid var(--border);
@@ -381,6 +393,7 @@ a:hover {
   gap: 1.25rem;
 }
 
+/* Stack sidebar above main on narrow viewports */
 @media (max-width: 900px) {
   .app-shell {
     flex-direction: column;
